@@ -1,8 +1,6 @@
 import streamlit as st
 import os
 from dotenv import load_dotenv
-st.set_page_config(page_title="ExcelifAI", layout="wide")
-load_dotenv()
 from rag_utils.summarizer import summarize_text
 from rag_utils.parse_pdf import extract_text_from_pdf
 from langchain.text_splitter import RecursiveCharacterTextSplitter
@@ -62,6 +60,6 @@ if uploaded_files:
         st.session_state.chat_history.append(("AI", answer))
 
     if st.session_state.chat_history:
-        st.subheader("🗂️ Conversation History")
+        st.subheader("Conversation History")
         for speaker, msg in st.session_state.chat_history:
             st.markdown(f"**{speaker}:** {msg}")
