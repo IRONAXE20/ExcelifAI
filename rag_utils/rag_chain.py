@@ -5,10 +5,12 @@ from langchain.chains import ConversationalRetrievalChain
 from langchain.memory import ConversationBufferMemory
 import os
 from dotenv import load_dotenv
-
+from langchain_community.vectorstores.utils import DistanceStrategy
 load_dotenv()
 
-embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
+embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2",
+                                   encode_kwargs={"normalize_embeddings": True}
+                                  )
 
 llm = ChatGroq(
     temperature=0,
@@ -22,7 +24,7 @@ memory = ConversationBufferMemory(
 )
 
 def build_qa_chain(docs):
-    db = FAISS.from_documents(docs, embeddings)
+    db = FAISS.from_documents(docs, embeddings, distance_strategy=DistanceStrategy.MAX_INNER_PRODUCT)
     retriever = db.as_retriever(search_kwargs={"k": 3})
 
     qa_chain = ConversationalRetrievalChain.from_llm(
